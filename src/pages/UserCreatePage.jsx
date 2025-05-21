@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { createUser } from "../services/api";
+import { validateImage, validateUserForm } from "../utils/validators";
 
 const UserCreatePage = () => {
   const navigate = useNavigate();
@@ -22,24 +23,7 @@ const UserCreatePage = () => {
   const [creationTime, setCreationTime] = useState("");
 
   const validateForm = () => {
-    const errors = {};
-
-    if (!formData.first_name.trim()) {
-      errors.first_name = "El nombre es obligatorio";
-    }
-
-    if (!formData.last_name.trim()) {
-      errors.last_name = "El apellido es obligatorio";
-    }
-
-    if (!formData.email.trim()) {
-      errors.email = "El email es obligatorio";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      errors.email = "El email no es válido";
-    }
-
-    setFormErrors(errors);
-    return Object.keys(errors).length === 0;
+    return validateUserForm(formData, setFormErrors);
   };
 
   const handleChange = (e) => {
@@ -61,20 +45,7 @@ const UserCreatePage = () => {
     const file = e.target.files[0];
     if (!file) return;
 
-    if (!file.type.startsWith("image/")) {
-      setFormErrors((prev) => ({
-        ...prev,
-        avatar: "El archivo debe ser una imagen",
-      }));
-      return;
-    }
-
-    if (file.size > 500 * 1024) {
-      setFormErrors((prev) => ({
-        ...prev,
-        avatar:
-          "La imagen no debe superar los 500KB debido a limitaciones de la API",
-      }));
+    if (!validateImage(file, setFormErrors)) {
       return;
     }
 
@@ -303,11 +274,13 @@ const UserCreatePage = () => {
                   formErrors.first_name ? "border-red-500" : "border-gray-300"
                 }`}
               />
-              {formErrors.first_name && (
-                <p className="mt-1 text-sm text-red-600">
-                  {formErrors.first_name}
-                </p>
-              )}
+              <div className="h-5 mt-1">
+                {formErrors.first_name && (
+                  <p className="text-sm text-red-600">
+                    {formErrors.first_name}
+                  </p>
+                )}
+              </div>
             </div>
 
             <div>
@@ -327,11 +300,11 @@ const UserCreatePage = () => {
                   formErrors.last_name ? "border-red-500" : "border-gray-300"
                 }`}
               />
-              {formErrors.last_name && (
-                <p className="mt-1 text-sm text-red-600">
-                  {formErrors.last_name}
-                </p>
-              )}
+              <div className="h-5 mt-1">
+                {formErrors.last_name && (
+                  <p className="text-sm text-red-600">{formErrors.last_name}</p>
+                )}
+              </div>
             </div>
 
             <div className="md:col-span-2">
@@ -351,9 +324,11 @@ const UserCreatePage = () => {
                   formErrors.email ? "border-red-500" : "border-gray-300"
                 }`}
               />
-              {formErrors.email && (
-                <p className="mt-1 text-sm text-red-600">{formErrors.email}</p>
-              )}
+              <div className="h-5 mt-1">
+                {formErrors.email && (
+                  <p className="text-sm text-red-600">{formErrors.email}</p>
+                )}
+              </div>
             </div>
 
             <div className="md:col-span-2">
@@ -421,9 +396,11 @@ const UserCreatePage = () => {
                   />
                 </div>
               </div>
-              {formErrors.avatar && (
-                <p className="mt-1 text-sm text-red-600">{formErrors.avatar}</p>
-              )}
+              <div className="h-5 mt-1">
+                {formErrors.avatar && (
+                  <p className="text-sm text-red-600">{formErrors.avatar}</p>
+                )}
+              </div>
             </div>
           </div>
 
