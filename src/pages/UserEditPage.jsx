@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { getUserById, updateUser } from "../services/api";
@@ -23,6 +21,8 @@ const UserEditPage = () => {
   const [changes, setChanges] = useState([]);
   const [imagePreview, setImagePreview] = useState(null);
   const [selectedFileName, setSelectedFileName] = useState("");
+  const [redirectCountdown, setRedirectCountdown] = useState(8);
+  const [updateTime, setUpdateTime] = useState("");
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -201,11 +201,20 @@ const UserEditPage = () => {
       const changesDetected = detectChanges();
       setChanges(changesDetected);
 
+      setUpdateTime(new Date().toLocaleString());
+
       setUpdateSuccess(true);
 
-      setTimeout(() => {
-        navigate(`/user/${id}`);
-      }, 7000);
+      let countdown = 8;
+      const timer = setInterval(() => {
+        countdown -= 1;
+        setRedirectCountdown(countdown);
+
+        if (countdown <= 0) {
+          clearInterval(timer);
+          navigate(`/user/${id}`);
+        }
+      }, 1000);
     } catch (err) {
       setError(
         "Error al actualizar el usuario: " +
@@ -227,16 +236,106 @@ const UserEditPage = () => {
     return (
       <div className="max-w-2xl mx-auto">
         <div
-          className="bg-green-100 border border-green-400 text-green-700 px-6 py-4 rounded-lg mb-6"
+          className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-6"
           role="alert"
         >
-          <h3 className="font-bold text-lg mb-2">
+          <strong className="font-bold">
             ¡Usuario actualizado correctamente!
-          </h3>
-          <p className="mb-2">Se han realizado los siguientes cambios:</p>
+          </strong>
+          <span className="block sm:inline">
+            {" "}
+            Serás redirigido a la página de detalles en {redirectCountdown}{" "}
+            segundos...
+          </span>
+          <Link to={`/user/${id}`} className="ml-2 font-medium underline">
+            Volver ahora
+          </Link>
+        </div>
 
-          {changes.length > 0 ? (
-            <ul className="list-disc pl-5 mb-4">
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-2xl font-bold text-gray-800">
+            Detalles del Usuario
+          </h1>
+          <div className="flex space-x-2">
+            <button
+              disabled
+              className="bg-blue-500 opacity-50 text-white font-medium py-2 px-4 rounded cursor-not-allowed"
+            >
+              Editar
+            </button>
+            <button
+              disabled
+              className="bg-red-500 opacity-50 text-white font-medium py-2 px-4 rounded cursor-not-allowed"
+            >
+              Eliminar
+            </button>
+          </div>
+        </div>
+
+        <div className="bg-white shadow-md rounded-lg overflow-hidden">
+          <div className="p-6">
+            <div className="flex flex-col md:flex-row">
+              <div className="md:w-1/3 flex justify-center mb-6 md:mb-0">
+                <img
+                  src={imagePreview || "/placeholder.svg?height=100&width=100"}
+                  alt={`${formData.first_name} ${formData.last_name}`}
+                  className="w-40 h-40 rounded-full object-cover border-4 border-gray-200"
+                />
+              </div>
+              <div className="md:w-2/3">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-500">ID</h3>
+                    <p className="text-lg text-gray-800">{id}</p>
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-500">Email</h3>
+                    <p className="text-lg text-gray-800">{formData.email}</p>
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-500">
+                      Nombre
+                    </h3>
+                    <p className="text-lg text-gray-800">
+                      {formData.first_name}
+                    </p>
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-500">
+                      Apellido
+                    </h3>
+                    <p className="text-lg text-gray-800">
+                      {formData.last_name}
+                    </p>
+                  </div>
+                  {selectedFileName && (
+                    <div className="md:col-span-2">
+                      <h3 className="text-sm font-medium text-gray-500">
+                        Archivo de imagen seleccionado
+                      </h3>
+                      <p className="text-lg text-gray-800">
+                        {selectedFileName}
+                      </p>
+                    </div>
+                  )}
+                  <div className="md:col-span-2">
+                    <h3 className="text-sm font-medium text-gray-500">
+                      Actualizado en
+                    </h3>
+                    <p className="text-lg text-gray-800">{updateTime}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {changes.length > 0 && (
+          <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <h3 className="font-medium text-blue-800 mb-2">
+              Cambios realizados:
+            </h3>
+            <ul className="list-disc pl-5 text-blue-700">
               {changes.map((change, index) => (
                 <li key={index}>
                   <strong>{change.field}:</strong>{" "}
@@ -248,23 +347,20 @@ const UserEditPage = () => {
                 </li>
               ))}
             </ul>
-          ) : (
-            <p className="mb-4">No se detectaron cambios en los datos.</p>
-          )}
-
-          <p className="text-sm italic">
-            Nota: Debido a que ReqRes.in es una API de prueba, estos cambios no
-            se guardarán permanentemente. Serás redirigido en unos segundos...
-          </p>
-
-          <div className="mt-4">
-            <Link
-              to={`/user/${id}`}
-              className="text-green-800 font-medium hover:underline"
-            >
-              Volver a la página de detalles ahora
-            </Link>
           </div>
+        )}
+
+        <div className="mt-6">
+          <p className="text-sm text-gray-500 italic">
+            Nota: Debido a que ReqRes.in es una API de prueba, estos cambios no
+            se guardarán permanentemente.
+          </p>
+          <Link
+            to={`/user/${id}`}
+            className="text-blue-600 hover:text-blue-800 mt-2 inline-block"
+          >
+            &larr; Volver a la página de detalles
+          </Link>
         </div>
       </div>
     );
@@ -434,14 +530,14 @@ const UserEditPage = () => {
             <button
               type="button"
               onClick={() => navigate(`/user/${id}`)}
-              className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 cursor-pointer"
             >
               Cancelar
             </button>
             <button
               type="submit"
               disabled={submitting}
-              className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+              className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 cursor-pointer"
             >
               {submitting ? "Guardando..." : "Guardar Cambios"}
             </button>
