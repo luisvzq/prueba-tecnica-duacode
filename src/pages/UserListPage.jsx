@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import Pagination from "../components/Pagination";
 import UserCard from "../components/UserCard";
 import { getUsers } from "../services/api";
 
@@ -36,6 +37,10 @@ const UserListPage = () => {
       setSortBy(field);
       setSortOrder("asc");
     }
+  };
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
   };
 
   const sortedUsers = [...users].sort((a, b) => {
@@ -111,6 +116,11 @@ const UserListPage = () => {
           <UserCard key={user.id} user={user} />
         ))}
       </div>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
     </div>
   );
 };
