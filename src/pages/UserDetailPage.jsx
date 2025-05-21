@@ -9,6 +9,7 @@ const UserDetailPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteSuccess, setDeleteSuccess] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -30,8 +31,17 @@ const UserDetailPage = () => {
     if (window.confirm("¿Estás seguro de que deseas eliminar este usuario?")) {
       try {
         setIsDeleting(true);
-        await deleteUser(id);
-        navigate("/");
+        const success = await deleteUser(id);
+
+        if (success) {
+          setDeleteSuccess(true);
+          setTimeout(() => {
+            navigate("/");
+          }, 2000);
+        } else {
+          setError("Error al eliminar el usuario");
+          setIsDeleting(false);
+        }
       } catch (err) {
         setError(`Error al eliminar el usuario: ${err.message}`);
         setIsDeleting(false);
@@ -43,6 +53,18 @@ const UserDetailPage = () => {
     return (
       <div className="flex justify-center items-center h-64">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-500"></div>
+      </div>
+    );
+  }
+
+  if (deleteSuccess) {
+    return (
+      <div
+        className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative"
+        role="alert"
+      >
+        <strong className="font-bold">¡Usuario borrado!</strong>
+        <span className="block sm:inline"> Redirigiendo...</span>
       </div>
     );
   }
