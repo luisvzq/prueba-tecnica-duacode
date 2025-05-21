@@ -1,9 +1,39 @@
+import { motion } from "framer-motion";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 const UserCard = ({ user }) => {
+  const [coords, setCoords] = useState({ x: 0, y: 0 });
+  const [isHovering, setIsHovering] = useState(false);
+
+  const handleMouseMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setCoords({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    });
+  };
+
   return (
     <Link to={`/user/${user.id}`} className="block">
-      <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+      <motion.div
+        onMouseMove={handleMouseMove}
+        onMouseEnter={() => setIsHovering(true)}
+        onMouseLeave={() => setIsHovering(false)}
+        className="relative rounded-lg overflow-hidden"
+        style={{
+          background: isHovering
+            ? `radial-gradient(circle at ${coords.x}px ${coords.y}px, rgba(59,130,246,0.15), transparent 60%)`
+            : "white",
+        }}
+        animate={{
+          scale: isHovering ? 1.015 : 1,
+          boxShadow: isHovering
+            ? "0 12px 24px rgba(0, 0, 0, 0.12)"
+            : "0 4px 10px rgba(0, 0, 0, 0.06)",
+        }}
+        transition={{ type: "spring", stiffness: 220, damping: 20 }}
+      >
         <div className="p-4">
           <div className="flex items-center space-x-4">
             <img
@@ -24,7 +54,7 @@ const UserCard = ({ user }) => {
             Ver detalles →
           </span>
         </div>
-      </div>
+      </motion.div>
     </Link>
   );
 };

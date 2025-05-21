@@ -1,8 +1,26 @@
+import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Pagination from "../components/Pagination";
 import UserCard from "../components/UserCard";
 import { getUsers } from "../services/api";
+
+const containerVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      staggerChildren: 0.1,
+      when: "beforeChildren",
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0 },
+};
 
 const UserListPage = () => {
   const [users, setUsers] = useState([]);
@@ -75,7 +93,7 @@ const UserListPage = () => {
   }
 
   return (
-    <div>
+    <motion.div initial="hidden" animate="visible" variants={containerVariants}>
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-gray-800">
           Listado de Usuarios
@@ -90,7 +108,9 @@ const UserListPage = () => {
 
       <div className="mb-4">
         <div className="flex space-x-4 mb-2">
-          <button
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             onClick={() => handleSort("first_name")}
             className={`px-3 py-1 rounded ${
               sortBy === "first_name" ? "bg-gray-100 text-black" : "bg-gray-100"
@@ -98,8 +118,10 @@ const UserListPage = () => {
           >
             Nombre{" "}
             {sortBy === "first_name" && (sortOrder === "asc" ? "↑" : "↓")}
-          </button>
-          <button
+          </motion.button>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             onClick={() => handleSort("last_name")}
             className={`px-3 py-1 rounded ${
               sortBy === "last_name" ? "bg-gray-100 text-black" : "bg-gray-100"
@@ -107,21 +129,29 @@ const UserListPage = () => {
           >
             Apellido{" "}
             {sortBy === "last_name" && (sortOrder === "asc" ? "↑" : "↓")}
-          </button>
+          </motion.button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <motion.div
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
         {sortedUsers.map((user) => (
-          <UserCard key={user.id} user={user} />
+          <motion.div key={user.id} variants={itemVariants}>
+            <UserCard user={user} />
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
+
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={handlePageChange}
       />
-    </div>
+    </motion.div>
   );
 };
 
