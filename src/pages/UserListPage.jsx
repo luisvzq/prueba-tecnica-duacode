@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { Loader2 } from "lucide-react";
 import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Pagination from "../components/Pagination";
@@ -77,15 +78,11 @@ const UserListPage = () => {
   if (loading) {
     return (
       <div
-        className={`flex justify-center items-center h-64 ${
-          darkMode ? "bg-gray-900" : ""
+        className={`fixed inset-0 z-50 flex items-center justify-center ${
+          darkMode ? "bg-gray-900" : "bg-white"
         }`}
       >
-        <div
-          className={`animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 ${
-            darkMode ? "border-gray-300" : "border-gray-500"
-          }`}
-        ></div>
+        <Loader2 className="h-12 w-12 animate-spin text-gray-500 dark:text-gray-300" />
       </div>
     );
   }
