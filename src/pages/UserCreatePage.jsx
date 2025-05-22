@@ -1,9 +1,11 @@
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { ThemeContext } from "../context/ThemeContext";
 import { createUser } from "../services/api";
 import { validateImage, validateUserForm } from "../utils/validators";
 
 const UserCreatePage = () => {
+  const { darkMode } = useContext(ThemeContext);
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
   const [formData, setFormData] = useState({
@@ -129,9 +131,13 @@ const UserCreatePage = () => {
 
   if (createSuccess) {
     return (
-      <div className="max-w-2xl mx-auto">
+      <div className={`max-w-2xl mx-auto ${darkMode ? "text-white" : ""}`}>
         <div
-          className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-6"
+          className={`${
+            darkMode
+              ? "bg-green-900 border-green-800 text-green-100"
+              : "bg-green-100 border-green-400 text-green-700"
+          } border px-4 py-3 rounded relative mb-6`}
           role="alert"
         >
           <strong className="font-bold">¡Usuario creado correctamente!</strong>
@@ -139,82 +145,159 @@ const UserCreatePage = () => {
             {" "}
             Serás redirigido al listado en {redirectCountdown} segundos...
           </span>
-          <Link to="/" className="ml-2 font-medium underline">
+          <Link
+            to="/"
+            className={`ml-2 font-medium underline ${
+              darkMode ? "text-green-200" : ""
+            }`}
+          >
             Volver ahora
           </Link>
         </div>
 
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold text-gray-800">
+          <h1
+            className={`text-2xl font-bold ${
+              darkMode ? "text-white" : "text-gray-800"
+            }`}
+          >
             Detalles del Usuario
           </h1>
           <div className="flex space-x-2">
             <button
               disabled
-              className="bg-gray-500 opacity-50 text-white font-medium py-2 px-4 rounded cursor-not-allowed"
+              className={`${
+                darkMode ? "bg-gray-700" : "bg-gray-500"
+              } opacity-50 text-white font-medium py-2 px-4 rounded cursor-not-allowed`}
             >
               Editar
             </button>
             <button
               disabled
-              className="bg-red-500 opacity-50 text-white font-medium py-2 px-4 rounded cursor-not-allowed"
+              className={`${
+                darkMode ? "bg-red-700" : "bg-red-500"
+              } opacity-50 text-white font-medium py-2 px-4 rounded cursor-not-allowed`}
             >
               Eliminar
             </button>
           </div>
         </div>
 
-        <div className="bg-white shadow-md rounded-lg overflow-hidden">
+        <div
+          className={`${
+            darkMode ? "bg-gray-800" : "bg-white"
+          } shadow-md rounded-lg overflow-hidden`}
+        >
           <div className="p-6">
             <div className="flex flex-col md:flex-row">
               <div className="md:w-1/3 flex justify-center mb-6 md:mb-0">
                 <img
                   src={createdUser.avatar || "/avatar-placeholder.jpg"}
                   alt={`${createdUser.first_name} ${createdUser.last_name}`}
-                  className="w-40 h-40 rounded-full object-cover border-4 border-gray-200"
+                  className={`w-40 h-40 rounded-full object-cover border-4 ${
+                    darkMode ? "border-gray-700" : "border-gray-200"
+                  }`}
                 />
               </div>
               <div className="md:w-2/3">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500">ID</h3>
-                    <p className="text-lg text-gray-800">{createdUser.id}</p>
+                    <h3
+                      className={`text-sm font-medium ${
+                        darkMode ? "text-gray-400" : "text-gray-500"
+                      }`}
+                    >
+                      ID
+                    </h3>
+                    <p
+                      className={`text-lg ${
+                        darkMode ? "text-white" : "text-gray-800"
+                      }`}
+                    >
+                      {createdUser.id}
+                    </p>
                   </div>
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500">Email</h3>
-                    <p className="text-lg text-gray-800">{createdUser.email}</p>
+                    <h3
+                      className={`text-sm font-medium ${
+                        darkMode ? "text-gray-400" : "text-gray-500"
+                      }`}
+                    >
+                      Email
+                    </h3>
+                    <p
+                      className={`text-lg ${
+                        darkMode ? "text-white" : "text-gray-800"
+                      }`}
+                    >
+                      {createdUser.email}
+                    </p>
                   </div>
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500">
+                    <h3
+                      className={`text-sm font-medium ${
+                        darkMode ? "text-gray-400" : "text-gray-500"
+                      }`}
+                    >
                       Nombre
                     </h3>
-                    <p className="text-lg text-gray-800">
+                    <p
+                      className={`text-lg ${
+                        darkMode ? "text-white" : "text-gray-800"
+                      }`}
+                    >
                       {createdUser.first_name}
                     </p>
                   </div>
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500">
+                    <h3
+                      className={`text-sm font-medium ${
+                        darkMode ? "text-gray-400" : "text-gray-500"
+                      }`}
+                    >
                       Apellido
                     </h3>
-                    <p className="text-lg text-gray-800">
+                    <p
+                      className={`text-lg ${
+                        darkMode ? "text-white" : "text-gray-800"
+                      }`}
+                    >
                       {createdUser.last_name}
                     </p>
                   </div>
                   {createdUser.selectedFileName && (
                     <div className="md:col-span-2">
-                      <h3 className="text-sm font-medium text-gray-500">
+                      <h3
+                        className={`text-sm font-medium ${
+                          darkMode ? "text-gray-400" : "text-gray-500"
+                        }`}
+                      >
                         Archivo de imagen seleccionado
                       </h3>
-                      <p className="text-lg text-gray-800">
+                      <p
+                        className={`text-lg ${
+                          darkMode ? "text-white" : "text-gray-800"
+                        }`}
+                      >
                         {createdUser.selectedFileName}
                       </p>
                     </div>
                   )}
                   <div className="md:col-span-2">
-                    <h3 className="text-sm font-medium text-gray-500">
+                    <h3
+                      className={`text-sm font-medium ${
+                        darkMode ? "text-gray-400" : "text-gray-500"
+                      }`}
+                    >
                       Creado en
                     </h3>
-                    <p className="text-lg text-gray-800">{creationTime}</p>
+                    <p
+                      className={`text-lg ${
+                        darkMode ? "text-white" : "text-gray-800"
+                      }`}
+                    >
+                      {creationTime}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -223,13 +306,21 @@ const UserCreatePage = () => {
         </div>
 
         <div className="mt-6">
-          <p className="text-sm text-gray-500 italic">
+          <p
+            className={`text-sm ${
+              darkMode ? "text-gray-400" : "text-gray-500"
+            } italic`}
+          >
             Nota: Debido a que ReqRes.in es una API de prueba, este usuario no
             se guardará permanentemente.
           </p>
           <Link
             to="/"
-            className="text-gray-600 hover:text-gray-800 mt-2 inline-block"
+            className={`${
+              darkMode
+                ? "text-gray-300 hover:text-white"
+                : "text-gray-600 hover:text-gray-800"
+            } mt-2 inline-block`}
           >
             &larr; Volver al listado
           </Link>
@@ -239,14 +330,22 @@ const UserCreatePage = () => {
   }
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <h1 className="text-2xl font-bold text-gray-800 mb-6">
+    <div className={`max-w-2xl mx-auto ${darkMode ? "text-white" : ""}`}>
+      <h1
+        className={`text-2xl font-bold ${
+          darkMode ? "text-white" : "text-gray-800"
+        } mb-6`}
+      >
         Crear Nuevo Usuario
       </h1>
 
       {error && (
         <div
-          className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4"
+          className={`${
+            darkMode
+              ? "bg-red-900 border-red-800 text-red-100"
+              : "bg-red-100 border-red-400 text-red-700"
+          } border px-4 py-3 rounded relative mb-4`}
           role="alert"
         >
           <strong className="font-bold">Error!</strong>
@@ -254,13 +353,19 @@ const UserCreatePage = () => {
         </div>
       )}
 
-      <div className="bg-white shadow-md rounded-lg overflow-hidden">
+      <div
+        className={`${
+          darkMode ? "bg-gray-800" : "bg-white"
+        } shadow-md rounded-lg overflow-hidden`}
+      >
         <form onSubmit={handleSubmit} className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label
                 htmlFor="first_name"
-                className="block text-sm font-medium text-gray-700 mb-1"
+                className={`block text-sm font-medium ${
+                  darkMode ? "text-gray-300" : "text-gray-700"
+                } mb-1`}
               >
                 Nombre
               </label>
@@ -270,9 +375,11 @@ const UserCreatePage = () => {
                 name="first_name"
                 value={formData.first_name}
                 onChange={handleChange}
-                className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 ${
-                  formErrors.first_name ? "border-red-500" : "border-gray-300"
-                }`}
+                className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none ${
+                  darkMode
+                    ? "bg-gray-700 border-gray-600 text-white focus:ring-gray-500 focus:border-gray-500"
+                    : "bg-white border-gray-300 focus:ring-gray-500 focus:border-gray-500"
+                } ${formErrors.first_name ? "border-red-500" : ""}`}
               />
               <div className="h-5 mt-1">
                 {formErrors.first_name && (
@@ -286,7 +393,9 @@ const UserCreatePage = () => {
             <div>
               <label
                 htmlFor="last_name"
-                className="block text-sm font-medium text-gray-700 mb-1"
+                className={`block text-sm font-medium ${
+                  darkMode ? "text-gray-300" : "text-gray-700"
+                } mb-1`}
               >
                 Apellido
               </label>
@@ -296,9 +405,11 @@ const UserCreatePage = () => {
                 name="last_name"
                 value={formData.last_name}
                 onChange={handleChange}
-                className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 ${
-                  formErrors.last_name ? "border-red-500" : "border-gray-300"
-                }`}
+                className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none ${
+                  darkMode
+                    ? "bg-gray-700 border-gray-600 text-white focus:ring-gray-500 focus:border-gray-500"
+                    : "bg-white border-gray-300 focus:ring-gray-500 focus:border-gray-500"
+                } ${formErrors.last_name ? "border-red-500" : ""}`}
               />
               <div className="h-5 mt-1">
                 {formErrors.last_name && (
@@ -310,7 +421,9 @@ const UserCreatePage = () => {
             <div className="md:col-span-2">
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-gray-700 mb-1"
+                className={`block text-sm font-medium ${
+                  darkMode ? "text-gray-300" : "text-gray-700"
+                } mb-1`}
               >
                 Email
               </label>
@@ -320,9 +433,11 @@ const UserCreatePage = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 ${
-                  formErrors.email ? "border-red-500" : "border-gray-300"
-                }`}
+                className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none ${
+                  darkMode
+                    ? "bg-gray-700 border-gray-600 text-white focus:ring-gray-500 focus:border-gray-500"
+                    : "bg-white border-gray-300 focus:ring-gray-500 focus:border-gray-500"
+                } ${formErrors.email ? "border-red-500" : ""}`}
               />
               <div className="h-5 mt-1">
                 {formErrors.email && (
@@ -332,7 +447,11 @@ const UserCreatePage = () => {
             </div>
 
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                className={`block text-sm font-medium ${
+                  darkMode ? "text-gray-300" : "text-gray-700"
+                } mb-1`}
+              >
                 Avatar
               </label>
 
@@ -341,11 +460,17 @@ const UserCreatePage = () => {
                   <img
                     src={imagePreview || "/avatar-placeholder.jpg"}
                     alt="Avatar Preview"
-                    className="w-32 h-32 rounded-full object-cover border-2 border-gray-300"
+                    className={`w-32 h-32 rounded-full object-cover border-2 ${
+                      darkMode ? "border-gray-600" : "border-gray-300"
+                    }`}
                   />
                 </div>
                 {selectedFileName && (
-                  <p className="text-center text-sm text-gray-500 mt-2">
+                  <p
+                    className={`text-center text-sm ${
+                      darkMode ? "text-gray-400" : "text-gray-500"
+                    } mt-2`}
+                  >
                     Archivo seleccionado: {selectedFileName}
                   </p>
                 )}
@@ -353,7 +478,11 @@ const UserCreatePage = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <p className="text-sm text-gray-500 mb-2">
+                  <p
+                    className={`text-sm ${
+                      darkMode ? "text-gray-400" : "text-gray-500"
+                    } mb-2`}
+                  >
                     Subir imagen (máx. 500KB):
                   </p>
                   <input
@@ -366,7 +495,11 @@ const UserCreatePage = () => {
                   <button
                     type="button"
                     onClick={triggerFileInput}
-                    className="w-full flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+                    className={`w-full flex items-center justify-center px-4 py-2 border rounded-md shadow-sm text-sm font-medium ${
+                      darkMode
+                        ? "border-gray-600 text-gray-300 bg-gray-700 hover:bg-gray-600"
+                        : "border-gray-300 text-gray-700 bg-white hover:bg-gray-50"
+                    }`}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -386,13 +519,23 @@ const UserCreatePage = () => {
                   </button>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500 mb-2">O usar URL:</p>
+                  <p
+                    className={`text-sm ${
+                      darkMode ? "text-gray-400" : "text-gray-500"
+                    } mb-2`}
+                  >
+                    O usar URL:
+                  </p>
                   <input
                     type="url"
                     value={selectedFileName ? "" : formData.avatar}
                     onChange={handleImageUrlChange}
                     placeholder="https://ejemplo.com/imagen.jpg"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500"
+                    className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none ${
+                      darkMode
+                        ? "bg-gray-700 border-gray-600 text-white focus:ring-gray-500 focus:border-gray-500"
+                        : "bg-white border-gray-300 focus:ring-gray-500 focus:border-gray-500"
+                    }`}
                   />
                 </div>
               </div>
@@ -408,14 +551,22 @@ const UserCreatePage = () => {
             <button
               type="button"
               onClick={() => navigate("/")}
-              className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 cursor-pointer"
+              className={`px-4 py-2 border rounded-md shadow-sm text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 cursor-pointer ${
+                darkMode
+                  ? "border-gray-600 text-gray-300 bg-gray-700 hover:bg-gray-600"
+                  : "border-gray-300 text-gray-700 bg-white hover:bg-gray-50"
+              }`}
             >
               Cancelar
             </button>
             <button
               type="submit"
               disabled={submitting}
-              className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-500 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 disabled:opacity-50 cursor-pointer"
+              className={`px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 cursor-pointer ${
+                darkMode
+                  ? "bg-gray-600 hover:bg-gray-500 focus:ring-gray-500"
+                  : "bg-gray-500 hover:bg-gray-600 focus:ring-gray-500"
+              }`}
             >
               {submitting ? "Creando..." : "Crear Usuario"}
             </button>

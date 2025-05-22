@@ -1,9 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { ThemeContext } from "../context/ThemeContext";
 import { getUserById, updateUser } from "../services/api";
 import { validateImage, validateUserForm } from "../utils/validators";
 
 const UserEditPage = () => {
+  const { darkMode } = useContext(ThemeContext);
   const { id } = useParams();
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
@@ -195,17 +197,29 @@ const UserEditPage = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      <div
+        className={`flex justify-center items-center h-64 ${
+          darkMode ? "bg-gray-900" : ""
+        }`}
+      >
+        <div
+          className={`animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 ${
+            darkMode ? "border-blue-400" : "border-blue-500"
+          }`}
+        ></div>
       </div>
     );
   }
 
   if (updateSuccess) {
     return (
-      <div className="max-w-2xl mx-auto">
+      <div className={`max-w-2xl mx-auto ${darkMode ? "text-white" : ""}`}>
         <div
-          className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-6"
+          className={`${
+            darkMode
+              ? "bg-green-900 border-green-800 text-green-100"
+              : "bg-green-100 border-green-400 text-green-700"
+          } border px-4 py-3 rounded relative mb-6`}
           role="alert"
         >
           <strong className="font-bold">
@@ -216,82 +230,159 @@ const UserEditPage = () => {
             Serás redirigido a la página de detalles en {redirectCountdown}{" "}
             segundos...
           </span>
-          <Link to={`/user/${id}`} className="ml-2 font-medium underline">
+          <Link
+            to={`/user/${id}`}
+            className={`ml-2 font-medium underline ${
+              darkMode ? "text-green-200" : ""
+            }`}
+          >
             Volver ahora
           </Link>
         </div>
 
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold text-gray-800">
+          <h1
+            className={`text-2xl font-bold ${
+              darkMode ? "text-white" : "text-gray-800"
+            }`}
+          >
             Detalles del Usuario
           </h1>
           <div className="flex space-x-2">
             <button
               disabled
-              className="bg-blue-500 opacity-50 text-white font-medium py-2 px-4 rounded cursor-not-allowed"
+              className={`${
+                darkMode ? "bg-blue-700" : "bg-blue-500"
+              } opacity-50 text-white font-medium py-2 px-4 rounded cursor-not-allowed`}
             >
               Editar
             </button>
             <button
               disabled
-              className="bg-red-500 opacity-50 text-white font-medium py-2 px-4 rounded cursor-not-allowed"
+              className={`${
+                darkMode ? "bg-red-700" : "bg-red-500"
+              } opacity-50 text-white font-medium py-2 px-4 rounded cursor-not-allowed`}
             >
               Eliminar
             </button>
           </div>
         </div>
 
-        <div className="bg-white shadow-md rounded-lg overflow-hidden">
+        <div
+          className={`${
+            darkMode ? "bg-gray-800" : "bg-white"
+          } shadow-md rounded-lg overflow-hidden`}
+        >
           <div className="p-6">
             <div className="flex flex-col md:flex-row">
               <div className="md:w-1/3 flex justify-center mb-6 md:mb-0">
                 <img
                   src={imagePreview || "/placeholder.svg?height=100&width=100"}
                   alt={`${formData.first_name} ${formData.last_name}`}
-                  className="w-40 h-40 rounded-full object-cover border-4 border-gray-200"
+                  className={`w-40 h-40 rounded-full object-cover border-4 ${
+                    darkMode ? "border-gray-700" : "border-gray-200"
+                  }`}
                 />
               </div>
               <div className="md:w-2/3">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500">ID</h3>
-                    <p className="text-lg text-gray-800">{id}</p>
+                    <h3
+                      className={`text-sm font-medium ${
+                        darkMode ? "text-gray-400" : "text-gray-500"
+                      }`}
+                    >
+                      ID
+                    </h3>
+                    <p
+                      className={`text-lg ${
+                        darkMode ? "text-white" : "text-gray-800"
+                      }`}
+                    >
+                      {id}
+                    </p>
                   </div>
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500">Email</h3>
-                    <p className="text-lg text-gray-800">{formData.email}</p>
+                    <h3
+                      className={`text-sm font-medium ${
+                        darkMode ? "text-gray-400" : "text-gray-500"
+                      }`}
+                    >
+                      Email
+                    </h3>
+                    <p
+                      className={`text-lg ${
+                        darkMode ? "text-white" : "text-gray-800"
+                      }`}
+                    >
+                      {formData.email}
+                    </p>
                   </div>
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500">
+                    <h3
+                      className={`text-sm font-medium ${
+                        darkMode ? "text-gray-400" : "text-gray-500"
+                      }`}
+                    >
                       Nombre
                     </h3>
-                    <p className="text-lg text-gray-800">
+                    <p
+                      className={`text-lg ${
+                        darkMode ? "text-white" : "text-gray-800"
+                      }`}
+                    >
                       {formData.first_name}
                     </p>
                   </div>
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500">
+                    <h3
+                      className={`text-sm font-medium ${
+                        darkMode ? "text-gray-400" : "text-gray-500"
+                      }`}
+                    >
                       Apellido
                     </h3>
-                    <p className="text-lg text-gray-800">
+                    <p
+                      className={`text-lg ${
+                        darkMode ? "text-white" : "text-gray-800"
+                      }`}
+                    >
                       {formData.last_name}
                     </p>
                   </div>
                   {selectedFileName && (
                     <div className="md:col-span-2">
-                      <h3 className="text-sm font-medium text-gray-500">
+                      <h3
+                        className={`text-sm font-medium ${
+                          darkMode ? "text-gray-400" : "text-gray-500"
+                        }`}
+                      >
                         Archivo de imagen seleccionado
                       </h3>
-                      <p className="text-lg text-gray-800">
+                      <p
+                        className={`text-lg ${
+                          darkMode ? "text-white" : "text-gray-800"
+                        }`}
+                      >
                         {selectedFileName}
                       </p>
                     </div>
                   )}
                   <div className="md:col-span-2">
-                    <h3 className="text-sm font-medium text-gray-500">
+                    <h3
+                      className={`text-sm font-medium ${
+                        darkMode ? "text-gray-400" : "text-gray-500"
+                      }`}
+                    >
                       Actualizado en
                     </h3>
-                    <p className="text-lg text-gray-800">{updateTime}</p>
+                    <p
+                      className={`text-lg ${
+                        darkMode ? "text-white" : "text-gray-800"
+                      }`}
+                    >
+                      {updateTime}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -300,11 +391,25 @@ const UserEditPage = () => {
         </div>
 
         {changes.length > 0 && (
-          <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <h3 className="font-medium text-blue-800 mb-2">
+          <div
+            className={`mt-6 ${
+              darkMode
+                ? "bg-blue-900 border-blue-800 text-blue-100"
+                : "bg-blue-50 border-blue-200 text-blue-700"
+            } border rounded-lg p-4`}
+          >
+            <h3
+              className={`font-medium ${
+                darkMode ? "text-blue-200" : "text-blue-800"
+              } mb-2`}
+            >
               Cambios realizados:
             </h3>
-            <ul className="list-disc pl-5 text-blue-700">
+            <ul
+              className={`list-disc pl-5 ${
+                darkMode ? "text-blue-200" : "text-blue-700"
+              }`}
+            >
               {changes.map((change, index) => (
                 <li key={index}>
                   <strong>{change.field}:</strong>{" "}
@@ -320,13 +425,21 @@ const UserEditPage = () => {
         )}
 
         <div className="mt-6">
-          <p className="text-sm text-gray-500 italic">
+          <p
+            className={`text-sm ${
+              darkMode ? "text-gray-400" : "text-gray-500"
+            } italic`}
+          >
             Nota: Debido a que ReqRes.in es una API de prueba, estos cambios no
             se guardarán permanentemente.
           </p>
           <Link
             to={`/user/${id}`}
-            className="text-blue-600 hover:text-blue-800 mt-2 inline-block"
+            className={`${
+              darkMode
+                ? "text-blue-400 hover:text-blue-300"
+                : "text-blue-600 hover:text-blue-800"
+            } mt-2 inline-block`}
           >
             &larr; Volver a la página de detalles
           </Link>
@@ -336,12 +449,22 @@ const UserEditPage = () => {
   }
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <h1 className="text-2xl font-bold text-gray-800 mb-6">Editar Usuario</h1>
+    <div className={`max-w-2xl mx-auto ${darkMode ? "text-white" : ""}`}>
+      <h1
+        className={`text-2xl font-bold ${
+          darkMode ? "text-white" : "text-gray-800"
+        } mb-6`}
+      >
+        Editar Usuario
+      </h1>
 
       {error && (
         <div
-          className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4"
+          className={`${
+            darkMode
+              ? "bg-red-900 border-red-800 text-red-100"
+              : "bg-red-100 border-red-400 text-red-700"
+          } border px-4 py-3 rounded relative mb-4`}
           role="alert"
         >
           <strong className="font-bold">Error!</strong>
@@ -349,13 +472,19 @@ const UserEditPage = () => {
         </div>
       )}
 
-      <div className="bg-white shadow-md rounded-lg overflow-hidden">
+      <div
+        className={`${
+          darkMode ? "bg-gray-800" : "bg-white"
+        } shadow-md rounded-lg overflow-hidden`}
+      >
         <form onSubmit={handleSubmit} className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label
                 htmlFor="first_name"
-                className="block text-sm font-medium text-gray-700 mb-1"
+                className={`block text-sm font-medium ${
+                  darkMode ? "text-gray-300" : "text-gray-700"
+                } mb-1`}
               >
                 Nombre
               </label>
@@ -365,9 +494,11 @@ const UserEditPage = () => {
                 name="first_name"
                 value={formData.first_name}
                 onChange={handleChange}
-                className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${
-                  formErrors.first_name ? "border-red-500" : "border-gray-300"
-                }`}
+                className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none ${
+                  darkMode
+                    ? "bg-gray-700 border-gray-600 text-white focus:ring-blue-500 focus:border-blue-500"
+                    : "bg-white border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                } ${formErrors.first_name ? "border-red-500" : ""}`}
               />
               <div className="h-5 mt-1">
                 {formErrors.first_name && (
@@ -381,7 +512,9 @@ const UserEditPage = () => {
             <div>
               <label
                 htmlFor="last_name"
-                className="block text-sm font-medium text-gray-700 mb-1"
+                className={`block text-sm font-medium ${
+                  darkMode ? "text-gray-300" : "text-gray-700"
+                } mb-1`}
               >
                 Apellido
               </label>
@@ -391,9 +524,11 @@ const UserEditPage = () => {
                 name="last_name"
                 value={formData.last_name}
                 onChange={handleChange}
-                className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${
-                  formErrors.last_name ? "border-red-500" : "border-gray-300"
-                }`}
+                className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none ${
+                  darkMode
+                    ? "bg-gray-700 border-gray-600 text-white focus:ring-blue-500 focus:border-blue-500"
+                    : "bg-white border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                } ${formErrors.last_name ? "border-red-500" : ""}`}
               />
               <div className="h-5 mt-1">
                 {formErrors.last_name && (
@@ -405,7 +540,9 @@ const UserEditPage = () => {
             <div className="md:col-span-2">
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-gray-700 mb-1"
+                className={`block text-sm font-medium ${
+                  darkMode ? "text-gray-300" : "text-gray-700"
+                } mb-1`}
               >
                 Email
               </label>
@@ -415,9 +552,11 @@ const UserEditPage = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 ${
-                  formErrors.email ? "border-red-500" : "border-gray-300"
-                }`}
+                className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none ${
+                  darkMode
+                    ? "bg-gray-700 border-gray-600 text-white focus:ring-blue-500 focus:border-blue-500"
+                    : "bg-white border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                } ${formErrors.email ? "border-red-500" : ""}`}
               />
               <div className="h-5 mt-1">
                 {formErrors.email && (
@@ -427,7 +566,11 @@ const UserEditPage = () => {
             </div>
 
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                className={`block text-sm font-medium ${
+                  darkMode ? "text-gray-300" : "text-gray-700"
+                } mb-1`}
+              >
                 Avatar
               </label>
 
@@ -438,11 +581,17 @@ const UserEditPage = () => {
                       imagePreview || "/placeholder.svg?height=100&width=100"
                     }
                     alt="Avatar Preview"
-                    className="w-32 h-32 rounded-full object-cover border-2 border-gray-300"
+                    className={`w-32 h-32 rounded-full object-cover border-2 ${
+                      darkMode ? "border-gray-600" : "border-gray-300"
+                    }`}
                   />
                 </div>
                 {selectedFileName && (
-                  <p className="text-center text-sm text-gray-500 mt-2">
+                  <p
+                    className={`text-center text-sm ${
+                      darkMode ? "text-gray-400" : "text-gray-500"
+                    } mt-2`}
+                  >
                     Archivo seleccionado: {selectedFileName}
                   </p>
                 )}
@@ -450,7 +599,11 @@ const UserEditPage = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <p className="text-sm text-gray-500 mb-2">
+                  <p
+                    className={`text-sm ${
+                      darkMode ? "text-gray-400" : "text-gray-500"
+                    } mb-2`}
+                  >
                     Subir imagen (máx. 500KB):
                   </p>
                   <input
@@ -463,7 +616,11 @@ const UserEditPage = () => {
                   <button
                     type="button"
                     onClick={triggerFileInput}
-                    className="w-full flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+                    className={`w-full flex items-center justify-center px-4 py-2 border rounded-md shadow-sm text-sm font-medium ${
+                      darkMode
+                        ? "border-gray-600 text-gray-300 bg-gray-700 hover:bg-gray-600"
+                        : "border-gray-300 text-gray-700 bg-white hover:bg-gray-50"
+                    }`}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -483,13 +640,23 @@ const UserEditPage = () => {
                   </button>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500 mb-2">O usar URL:</p>
+                  <p
+                    className={`text-sm ${
+                      darkMode ? "text-gray-400" : "text-gray-500"
+                    } mb-2`}
+                  >
+                    O usar URL:
+                  </p>
                   <input
                     type="url"
                     value={selectedFileName ? "" : formData.avatar}
                     onChange={handleImageUrlChange}
                     placeholder="https://ejemplo.com/imagen.jpg"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                    className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none ${
+                      darkMode
+                        ? "bg-gray-700 border-gray-600 text-white focus:ring-blue-500 focus:border-blue-500"
+                        : "bg-white border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                    }`}
                   />
                 </div>
               </div>
@@ -505,14 +672,22 @@ const UserEditPage = () => {
             <button
               type="button"
               onClick={() => navigate(`/user/${id}`)}
-              className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 cursor-pointer"
+              className={`px-4 py-2 border rounded-md shadow-sm text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 cursor-pointer ${
+                darkMode
+                  ? "border-gray-600 text-gray-300 bg-gray-700 hover:bg-gray-600"
+                  : "border-gray-300 text-gray-700 bg-white hover:bg-gray-50"
+              }`}
             >
               Cancelar
             </button>
             <button
               type="submit"
               disabled={submitting}
-              className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 cursor-pointer"
+              className={`px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 cursor-pointer ${
+                darkMode
+                  ? "bg-blue-600 hover:bg-blue-500"
+                  : "bg-blue-500 hover:bg-blue-600"
+              }`}
             >
               {submitting ? "Guardando..." : "Guardar Cambios"}
             </button>

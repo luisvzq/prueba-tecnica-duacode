@@ -1,8 +1,9 @@
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Pagination from "../components/Pagination";
 import UserCard from "../components/UserCard";
+import { ThemeContext } from "../context/ThemeContext";
 import { getUsers } from "../services/api";
 
 const containerVariants = {
@@ -23,6 +24,7 @@ const itemVariants = {
 };
 
 const UserListPage = () => {
+  const { darkMode } = useContext(ThemeContext);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -74,8 +76,16 @@ const UserListPage = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-500"></div>
+      <div
+        className={`flex justify-center items-center h-64 ${
+          darkMode ? "bg-gray-900" : ""
+        }`}
+      >
+        <div
+          className={`animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 ${
+            darkMode ? "border-gray-300" : "border-gray-500"
+          }`}
+        ></div>
       </div>
     );
   }
@@ -83,7 +93,11 @@ const UserListPage = () => {
   if (error) {
     return (
       <div
-        className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+        className={`${
+          darkMode
+            ? "bg-red-900 border-red-800 text-red-100"
+            : "bg-red-100 border-red-400 text-red-700"
+        } border px-4 py-3 rounded relative`}
         role="alert"
       >
         <strong className="font-bold">Error!</strong>
@@ -93,14 +107,29 @@ const UserListPage = () => {
   }
 
   return (
-    <motion.div initial="hidden" animate="visible" variants={containerVariants}>
+    <motion.div
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
+      className={`transition-colors duration-300 ${
+        darkMode ? "text-white" : ""
+      }`}
+    >
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">
+        <h1
+          className={`text-2xl font-bold ${
+            darkMode ? "text-white" : "text-gray-800"
+          }`}
+        >
           Listado de Usuarios
         </h1>
         <Link
           to="/user/create"
-          className="bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded transition-colors"
+          className={`${
+            darkMode
+              ? "bg-gray-700 hover:bg-gray-600"
+              : "bg-gray-500 hover:bg-gray-600"
+          } text-white font-medium py-2 px-4 rounded transition-colors`}
         >
           Crear Usuario
         </Link>
@@ -113,7 +142,13 @@ const UserListPage = () => {
             whileTap={{ scale: 0.95 }}
             onClick={() => handleSort("first_name")}
             className={`px-3 py-1 rounded ${
-              sortBy === "first_name" ? "bg-gray-100 text-black" : "bg-gray-100"
+              sortBy === "first_name"
+                ? darkMode
+                  ? "bg-gray-700 text-white"
+                  : "bg-gray-100 text-black"
+                : darkMode
+                ? "bg-gray-800 text-gray-300"
+                : "bg-gray-100 text-gray-700"
             }`}
           >
             Nombre{" "}
@@ -124,7 +159,13 @@ const UserListPage = () => {
             whileTap={{ scale: 0.95 }}
             onClick={() => handleSort("last_name")}
             className={`px-3 py-1 rounded ${
-              sortBy === "last_name" ? "bg-gray-100 text-black" : "bg-gray-100"
+              sortBy === "last_name"
+                ? darkMode
+                  ? "bg-gray-700 text-white"
+                  : "bg-gray-100 text-black"
+                : darkMode
+                ? "bg-gray-800 text-gray-300"
+                : "bg-gray-100 text-gray-700"
             }`}
           >
             Apellido{" "}
