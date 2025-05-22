@@ -465,15 +465,17 @@ const UserCreatePage = () => {
                     }`}
                   />
                 </div>
-                {selectedFileName && (
-                  <p
-                    className={`text-center text-sm ${
-                      darkMode ? "text-gray-400" : "text-gray-500"
-                    } mt-2`}
-                  >
-                    Archivo seleccionado: {selectedFileName}
-                  </p>
-                )}
+                <div className="h-5 mt-2">
+                  {selectedFileName && (
+                    <p
+                      className={`text-center text-sm ${
+                        darkMode ? "text-gray-400" : "text-gray-500"
+                      }`}
+                    >
+                      Archivo seleccionado: {selectedFileName}
+                    </p>
+                  )}
+                </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
